@@ -11,6 +11,9 @@ if ele_order == 1
     % dN/dxi
     Line.der_xi = [-1.0; 1.0];
 
+    % d2N/dxi2
+    Line.der_xixi = [0.0; 0.0];
+
 elseif ele_order == 2
     Line.Basis = [2 * qua^2 - 3 * qua + 1;
                   2 * qua^2 - 1 * qua;
@@ -18,8 +21,11 @@ elseif ele_order == 2
     
     % dN/dxi
     Line.der_xi = [4 * qua - 3;
-              4 * qua - 1;
-             -8 * qua + 4];
+                   4 * qua - 1;
+                  -8 * qua + 4];
+
+    % d2N/dxi2
+    Line.der_xixi = [4; 4; -8];
 end
 
 % [dx/dxi; dy/dxi; dz/dxi]
