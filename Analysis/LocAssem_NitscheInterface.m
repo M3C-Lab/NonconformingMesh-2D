@@ -6,6 +6,13 @@ K_oppo_oppo = zeros(local_dof, local_dof);
 K_loc_oppo = zeros(local_dof, local_dof);
 K_oppo_loc = zeros(local_dof, local_dof);
 
+n_2d = [n1(1); n1(2)];
+loc_hh = sqrt(dot(n_2d, inv(local_basis.FFF) * n_2d));
+oppo_hh = sqrt(dot(n_2d, inv(oppo_basis.FFF) * n_2d));
+
+hh = max(loc_hh, oppo_hh);
+penalty = Paras.penalty_coef / hh;
+
 for A = 1 : DataArrays.nLocBas
     NA1 = local_basis.Basis(A);
     NA1_x = local_basis.dN_dx(A);
@@ -26,19 +33,19 @@ for A = 1 : DataArrays.nLocBas
 
         K_loc_loc(A, B) = K_loc_loc(A, B) ...
             - Paras.adjoint_coef * (NA1 * (NB1_x * n1(1) + NB1_y * n1(2)) + (NA1_x * n1(1) + NA1_y * n1(2)) * NB1) ...
-            + Paras.penalty_coef * NA1 * NB1;
+            + penalty * NA1 * NB1;
 
         K_oppo_oppo(A, B) = K_oppo_oppo(A, B) ...
             - Paras.adjoint_coef * (NA2 * (NB2_x * n1(1) + NB2_y * n1(2)) + (NA2_x * n1(1) + NA2_y * n1(2)) * NB2) ...
-            + Paras.penalty_coef * NA2 * NB2;
+            + penalty * NA2 * NB2;
 
         K_loc_oppo(A, B) = K_loc_oppo(A, B) ...
             + Paras.adjoint_coef * (NA1 * (NB2_x * n1(1) + NB2_y * n1(2)) + (NA1_x * n1(1) + NA1_y * n1(2)) * NB2) ...
-            - Paras.penalty_coef * NA1 * NB2;
+            - penalty * NA1 * NB2;
 
         K_oppo_loc(A, B) = K_oppo_loc(A, B) ...
             + Paras.adjoint_coef * (NA2 * (NB1_x * n1(1) + NB1_y * n1(2)) + (NA2_x * n1(1) + NA2_y * n1(2)) * NB1) ...
-            - Paras.penalty_coef * NA2 * NB1;
+            - penalty * NA2 * NB1;
 
     end
 end

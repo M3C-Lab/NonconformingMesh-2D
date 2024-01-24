@@ -1,4 +1,4 @@
-function [K, F] = GAssem_TryNitsche(K, F, DataArrays, BCs, Paras)
+function [K, F] = GAssem_TryNitsche(K, F, DataArrays, BCs, Paras, u_exact)
 % Global assembly for intergral on the interface
 
 fprintf("  Global assembling on the interface ...\n");
@@ -8,7 +8,7 @@ num_inter_elem1 = size(BCs.traction.interface1, 2);
 num_inter_elem2 = size(BCs.traction.interface2, 2);
 
 % ratio1 + ratio2 = 1.0
-ratio1 = 0.0; ratio2 = 1.0;
+ratio1 = 0.5; ratio2 = 0.5;
 
 % Intergral on interface1
 for ee = 1 : num_inter_elem1
@@ -60,11 +60,19 @@ for ee = 1 : num_inter_elem1
                     LM_b1 = DataArrays.LM(bb, vol_ele_id);
                     if LM_b1 > 0
                         K(LM_a1, LM_b1) = K(LM_a1, LM_b1) + K_loc_loc(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b1);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a1) = F(LM_a1) - K_loc_loc(aa, bb) * g;
                     end
 
                     LM_b2 = DataArrays.LM(bb, oppo_vol_ele_id);
                     if LM_b2 > 0
                         K(LM_a1, LM_b2) = K(LM_a1, LM_b2) + K_loc_oppo(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b2);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a1) = F(LM_a1) - K_loc_oppo(aa, bb) * g;
                     end
                 end
             end
@@ -75,11 +83,19 @@ for ee = 1 : num_inter_elem1
                     LM_b2 = DataArrays.LM(bb, oppo_vol_ele_id);
                     if LM_b2 > 0
                         K(LM_a2, LM_b2) = K(LM_a2, LM_b2) + K_oppo_oppo(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b2);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a2) = F(LM_a2) - K_oppo_oppo(aa, bb) * g;
                     end
 
                     LM_b1 = DataArrays.LM(bb, vol_ele_id);
                     if LM_b1 > 0
                         K(LM_a2, LM_b1) = K(LM_a2, LM_b1) + K_oppo_loc(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b1);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a2) = F(LM_a2) - K_oppo_loc(aa, bb) * g;
                     end
                 end
             end
@@ -129,7 +145,7 @@ for ee = 1 : num_inter_elem2
         K_oppo_loc = ratio2 * K_oppo_loc * DataArrays.linequad.wq(qua) * J(qua);
 
         local_dof = size(DataArrays.LM, 1);
-
+        
         for aa = 1 : local_dof
             LM_a1 = DataArrays.LM(aa, vol_ele_id);
             if LM_a1 > 0
@@ -137,11 +153,19 @@ for ee = 1 : num_inter_elem2
                     LM_b1 = DataArrays.LM(bb, vol_ele_id);
                     if LM_b1 > 0
                         K(LM_a1, LM_b1) = K(LM_a1, LM_b1) + K_loc_loc(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b1);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a1) = F(LM_a1) - K_loc_loc(aa, bb) * g;
                     end
 
                     LM_b2 = DataArrays.LM(bb, oppo_vol_ele_id);
                     if LM_b2 > 0
                         K(LM_a1, LM_b2) = K(LM_a1, LM_b2) + K_loc_oppo(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b2);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a1) = F(LM_a1) - K_loc_oppo(aa, bb) * g;
                     end
                 end
             end
@@ -152,11 +176,19 @@ for ee = 1 : num_inter_elem2
                     LM_b2 = DataArrays.LM(bb, oppo_vol_ele_id);
                     if LM_b2 > 0
                         K(LM_a2, LM_b2) = K(LM_a2, LM_b2) + K_oppo_oppo(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b2);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a2) = F(LM_a2) - K_oppo_oppo(aa, bb) * g;
                     end
 
                     LM_b1 = DataArrays.LM(bb, vol_ele_id);
                     if LM_b1 > 0
                         K(LM_a2, LM_b1) = K(LM_a2, LM_b1) + K_oppo_loc(aa, bb);
+                    else
+                        node_xyz = DataArrays.Nodes(:, -LM_b1);
+                        g = u_exact(node_xyz(1), node_xyz(2));
+                        F(LM_a2) = F(LM_a2) - K_oppo_loc(aa, bb) * g;
                     end
                 end
             end

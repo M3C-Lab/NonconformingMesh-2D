@@ -1,4 +1,4 @@
- function [K, F] = GAssem(K, F, DataArrays, f)
+ function [K, F] = GAssem(K, F, DataArrays, u_exact, f)
 % Main global assembly
 
 fprintf("  Global assembling in the whole domain ...\n");
@@ -14,7 +14,10 @@ for ee = 1 : DataArrays.nElem
                 LM_b = DataArrays.LM(bb, ee);
                 if LM_b > 0
                     K(LM_a, LM_b) = K(LM_a, LM_b) + K_ele(aa, bb);
-                    % else do nothing since Dirichlet BC g=0
+                else
+                    node_xyz = DataArrays.Nodes(:, -LM_b);
+                    g = u_exact(node_xyz(1), node_xyz(2));
+                    F(LM_a) = F(LM_a) - K_ele(aa, bb) * g;
                 end
             end
         end

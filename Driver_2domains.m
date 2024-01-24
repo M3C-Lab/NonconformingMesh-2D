@@ -26,7 +26,7 @@ end
 [DataArrays.postquad.qp, DataArrays.postquad.wq, DataArrays.postquad.nqp] = TriQuad(6);
 
 % Set parameters for Nitsche's method
-Paras.penalty_coef = 1e3;
+Paras.penalty_coef = 100;
 Paras.adjoint_coef = 1.0;
 
 % Set opposite seeking priority for interface elements
@@ -44,10 +44,10 @@ fprintf("\nGlobal assembly routine:\n");
 
 % Global assembly
 % Main global assembly
-[K, F] = GAssem(K, F, DataArrays, f);
+[K, F] = GAssem(K, F, DataArrays, u, f);
 
 % Global assembly for interface
-[K, F] = GAssem_TryNitsche(K, F, DataArrays, BCs, Paras);
+[K, F] = GAssem_TryNitsche(K, F, DataArrays, BCs, Paras, u);
 
 fprintf("Global assembly finifshed.\n");
 

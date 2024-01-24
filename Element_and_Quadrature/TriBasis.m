@@ -53,7 +53,7 @@ nonsymm_Jac = node_ele * Der_1;
 Tri.n_out = cross(nonsymm_Jac(:, 1), nonsymm_Jac(:, 2));
 
 % First fundamental form
-FFF = nonsymm_Jac' * nonsymm_Jac;
+Tri.FFF = nonsymm_Jac' * nonsymm_Jac;
 
 Grad = zeros(size(node_ele, 2), 3);
 % [dN1/dx, dN1/dy, dN1/dz;
@@ -63,7 +63,7 @@ for aa = 1 : size(node_ele, 2)
     grad_xi = Der_1(aa, :)';
     % [dN/dr; dN/ds]
 
-    grad_x = (nonsymm_Jac * inv(FFF)) * grad_xi;
+    grad_x = (nonsymm_Jac * inv(Tri.FFF)) * grad_xi;
     % [dN/dx; dN/dy; dN/dz]
 
     Grad(aa, :) = grad_x';
