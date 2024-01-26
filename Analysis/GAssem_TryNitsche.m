@@ -8,7 +8,7 @@ num_inter_elem1 = size(BCs.traction.interface1, 2);
 num_inter_elem2 = size(BCs.traction.interface2, 2);
 
 % ratio1 + ratio2 = 1.0
-ratio1 = 0.5; ratio2 = 0.5;
+ratio1 = 0.0; ratio2 = 0.0;
 
 % Intergral on interface1
 for ee = 1 : num_inter_elem1
@@ -136,7 +136,7 @@ for ee = 1 : num_inter_elem2
 
         oppo_basis = TriBasis(DataArrays.ele_order, oppo_node_ele, oppo_TriQuadPts);
 
-        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, -1 * n_out(:, qua), oppo_basis, oppo_n, DataArrays, Paras);
+        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, n_out(:, qua), oppo_basis, oppo_n, DataArrays, Paras);
 
         % * gwts
         K_loc_loc = ratio2 * K_loc_loc * DataArrays.linequad.wq(qua) * J(qua);
