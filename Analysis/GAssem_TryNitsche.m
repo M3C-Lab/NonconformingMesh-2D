@@ -43,7 +43,7 @@ for ee = 1 : num_inter_elem1
 
         oppo_basis = TriBasis(DataArrays.ele_order, oppo_node_ele, oppo_TriQuadPts);
 
-        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, n_out(:, qua), oppo_basis, DataArrays, Paras);
+        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, n_out(:, qua), oppo_basis, oppo_n, DataArrays, Paras);
 
         % * gwts
         K_loc_loc = ratio1 * K_loc_loc * DataArrays.linequad.wq(qua) * J(qua);
@@ -136,7 +136,7 @@ for ee = 1 : num_inter_elem2
 
         oppo_basis = TriBasis(DataArrays.ele_order, oppo_node_ele, oppo_TriQuadPts);
 
-        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, -1 * n_out(:, qua), oppo_basis, DataArrays, Paras);
+        [K_loc_loc, K_oppo_oppo, K_loc_oppo, K_oppo_loc] = LocAssem_NitscheInterface(local_basis, -1 * n_out(:, qua), oppo_basis, oppo_n, DataArrays, Paras);
 
         % * gwts
         K_loc_loc = ratio2 * K_loc_loc * DataArrays.linequad.wq(qua) * J(qua);
