@@ -65,15 +65,21 @@ fprintf("    %d line elements on interface2.\n", size(BCs.traction.interface2, 2
 % Find Dirichlet nodes
 fprintf("  Reading Dirichlet nodes...\n");
 DiriNode1 = get_Dirichlet_node(msh1, "Diri", DataArrays.ele_order);
+DiriFace1 = get_face2elem_faceid(msh1, "Diri", DataArrays.IEN_v1, DataArrays.ele_order);
 fprintf("    %d nodes on Diri1.\n", length(DiriNode1));
 
 DiriNode2 = get_Dirichlet_node(msh2, "Diri", DataArrays.ele_order);
 for nn = 1 : length(DiriNode2)
     DiriNode2(nn) = DiriNode2(nn) + DataArrays.num_node_1;
 end
+DiriFace2 = get_face2elem_faceid(msh2, "Diri", DataArrays.IEN_v2, DataArrays.ele_order);
+for ee = 1 : size(DiriFace2, 2)
+    DiriFace2(1, ee) = DiriFace2(1, ee) + DataArrays.num_elem_1;
+end
 fprintf("    %d nodes on Diri2.\n", length(DiriNode2));
 fprintf("  Combining Dirichlet node list ...\n");
 BCs.Dirichlet.DN = [DiriNode1, DiriNode2];
+BCs.Dirichlet.DiriFace = [DiriFace1, DiriFace2];
 
 % All nodes
 fprintf("  Combining nodes' coordinate...\n");
@@ -91,7 +97,7 @@ DataArrays.IEN_v = [DataArrays.IEN_v1, DataArrays.IEN_v2];
 % Construct ID array
 fprintf("  Create ID array...\n");
 DataArrays.ID = create_ID(DataArrays.nNode, DataArrays.dof);
-DataArrays.ID = modify_ID(DataArrays.ID, BCs.Dirichlet.DN, 1);
+% DataArrays.ID = modify_ID(DataArrays.ID, BCs.Dirichlet.DN, 1);
 
 % Construct LM array
 fprintf("  Create LM array...\n");

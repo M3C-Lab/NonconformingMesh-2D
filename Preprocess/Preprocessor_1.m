@@ -34,11 +34,12 @@ DataArrays.IEN_v = get_IEN_v(msh, DataArrays.ele_order);
 % Find Dirichlet nodes
 fprintf("  Reading Dirichlet nodes...\n");
 BCs.Dirichlet.DN = get_Dirichlet_node(msh, "Diri", DataArrays.ele_order);
+BCs.Dirichlet.DiriFace = get_face2elem_faceid(msh, "Diri", DataArrays.IEN_v, DataArrays.ele_order);
 
 % Construct ID array
 fprintf("  Create ID array...\n");
 DataArrays.ID = create_ID(DataArrays.nNode, DataArrays.dof);
-DataArrays.ID = modify_ID(DataArrays.ID, BCs.Dirichlet.DN, 1); 
+% DataArrays.ID = modify_ID(DataArrays.ID, BCs.Dirichlet.DN, 1); 
 
 % Construct LM array
 fprintf("  Create LM array...\n");

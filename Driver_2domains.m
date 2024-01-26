@@ -26,7 +26,7 @@ end
 [DataArrays.postquad.qp, DataArrays.postquad.wq, DataArrays.postquad.nqp] = TriQuad(6);
 
 % Set parameters for Nitsche's method
-Paras.penalty_coef = 100;
+Paras.penalty_coef = 10;
 Paras.adjoint_coef = 1.0;
 
 % Set opposite seeking priority for interface elements
@@ -52,7 +52,8 @@ fprintf("\nGlobal assembly routine:\n");
 fprintf("Global assembly finifshed.\n");
 
 fprintf("\nApply essential BC ...\n");
-[K, F] = EssBC(K, F, total_dof, BCs);
+[K, F] = WeakBC(K, F, DataArrays, BCs, Paras, u);
+% [K, F] = EssBC(K, F, total_dof, DataArrays.Nodes, BCs, u);
 
 fprintf("Solving ...\n");
 uh = K \ F;
